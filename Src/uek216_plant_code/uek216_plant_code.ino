@@ -9,6 +9,8 @@
 #define RED 18
 #define SENSOR 26
 
+Wire.begin();
+
 // Schwellen
 int max_humid = 10000;   // zu nass
 int min_humid = 50;      // zu trocken
@@ -92,7 +94,7 @@ void loop() {
   display.setTextSize(2);
   display.setTextColor(WHITE);
   display.setCursor(0, 20);
-  display.print("Hum:");
+  display.print("Water humidity:");
   display.print(moisture);
   display.display();
 
