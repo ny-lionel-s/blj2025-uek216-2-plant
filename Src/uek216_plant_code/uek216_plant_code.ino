@@ -91,7 +91,7 @@ void loop() {
   display.clearDisplay();
   display.setTextSize(2);
   display.setTextColor(WHITE);
-  display.setCursor(0, 20);
+  display.setCursor(0, 0);
   display.print("Currentwater humidity:");
   display.print(moisture);
   display.display();
