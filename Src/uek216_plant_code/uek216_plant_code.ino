@@ -18,7 +18,7 @@ const char* ssid = "GuestWLANPortal";
 
 
 // MQTT
-const char* mqtt_server = "2.2.10.127";
+const char* mqtt_server = "10.10.2.127";
 const char* mqtt_topic = "zuerich/plant/myplant";
 
 // Display 
