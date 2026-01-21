@@ -6,7 +6,7 @@
 // Pins
 #define GREEN 23
 #define YELLOW 25
-#define RED 26
+#define RED 27
 #define SENSOR 32
 
 // Schwellen
@@ -19,6 +19,9 @@ const char* ssid = "GuestWLANPortal";
 // MQTT
 const char* mqtt_server = "10.10.2.127";
 const char* mqtt_topic = "zuerich/plant/1";
+const char* mqtt_topic_min = "zuerich/plant/MIN_Rohwert";
+const char* mqtt_topic_max = "zuerich/plant/MAX_Rohwert";
+
 
 // Display
 #define SCREEN_WIDTH 128
@@ -52,9 +55,14 @@ void setup() {
 
   // MQTT
   client.setServer(mqtt_server, 1883);
+  client.setCallback(mqttCallback);
+
   while (!client.connected()) {
     client.connect("ESP32_HUMID");
   }
+  // Subscriptions
+  client.subscribe(mqtt_topic_min);
+  client.subscribe(mqtt_topic_max);
 }
 
 void setup_wifi() {
@@ -73,12 +81,18 @@ void reconnectMQTT() {
     Serial.print("MQTT reconnect...");
     if (client.connect("ESP32_HUMID")) {
       Serial.println("connected");
+
+      // erneut subscriben
+      client.subscribe(mqtt_topic_min);
+      client.subscribe(mqtt_topic_max);
+
     } else {
       Serial.println("failed");
       delay(2000);
     }
   }
 }
+
 
 int readMoisture() {
   int sum = 0;
@@ -88,8 +102,37 @@ int readMoisture() {
   }
   return sum / 10;
 }
+void mqttCallback(char* topic, byte* payload, unsigned int length) {
+  char msg[20];
+  if (length >= sizeof(msg)) return;
+
+  memcpy(msg, payload, length);
+  msg[length] = '\0';
+
+  int value = atoi(msg);
+  
+  if (strcmp(topic, mqtt_topic_min) == 0) {
+    min_humid = value;
+    Serial.print("New MIN set: ");
+    Serial.println(min_humid);
+  }
+
+  if (strcmp(topic, mqtt_topic_max) == 0) {
+    max_humid = value;
+    Serial.print("New MAX set: ");
+    Serial.println(max_humid);
+  }
+
+  Serial.print("Topic: ");
+  Serial.println(topic);
+  Serial.print("Payload: ");
+  for (int i = 0; i < length; i++) {
+    Serial.print((char)payload[i]);
+  }
+  Serial.println();
+}
+
 void loop() {
-  Serial.println("Loop alive");
   if (!client.connected()) {
     reconnectMQTT();
   }
@@ -98,7 +141,7 @@ void loop() {
   int moisture = readMoisture();
 
   // Rohdaten
-  String payload =  String(moisture);
+  String payload = String(moisture);
 
   client.publish(mqtt_topic, payload.c_str());
 
@@ -126,11 +169,9 @@ void loop() {
   // Display
   display.clearDisplay();
   display.setTextSize(1);
-  display.setCursor(0, 0);
-  display.print("Moisture:");
-
+  display.setTextColor(SSD1306_WHITE);
   display.setTextSize(2);
-  display.setCursor(0, 16);
+  display.setCursor(0, 10);
   display.print(moisture);
 
   display.display();
