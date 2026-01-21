@@ -9,90 +9,60 @@
 #define RED 27
 #define SENSOR 32
 
-// Schwellen
-int max_humid = 2800;  // zu nass
-int min_humid = 1200;  // zu trocken
+// Schwellen (Startwerte)
+int max_humid = 2800;   // zu nass
+int min_humid = 1200;   // zu trocken
+
+// Publish-Filter
+const int PUBLISH_DELTA = 30;
+int lastPublishedMoisture = -1;
 
 // WLAN
 const char* ssid = "GuestWLANPortal";
 
 // MQTT
-const char* mqtt_server = "10.10.2.127";
-const char* mqtt_topic = "zuerich/plant/1";
+const char* mqtt_server   = "10.10.2.127";
+const char* mqtt_topic    = "zuerich/plant/1";
 const char* mqtt_topic_min = "zuerich/plant/MIN_Rohwert";
 const char* mqtt_topic_max = "zuerich/plant/MAX_Rohwert";
-
 
 // Display
 #define SCREEN_WIDTH 128
 #define SCREEN_HEIGHT 64
 Adafruit_SSD1306 display(SCREEN_WIDTH, SCREEN_HEIGHT, &Wire, -1);
 
-//  MQTT
+// MQTT
 WiFiClient espClient;
 PubSubClient client(espClient);
 
-//  Setup
-void setup() {
-  pinMode(GREEN, OUTPUT);
-  pinMode(YELLOW, OUTPUT);
-  pinMode(RED, OUTPUT);
-  pinMode(SENSOR, INPUT);
-
-  Wire.begin(21, 22);
-  Serial.begin(115200);
-
-  // Display
-  if (!display.begin(SSD1306_SWITCHCAPVCC, 0x3C)) {
-    while (1)
-      ;
-  }
-  display.clearDisplay();
-  display.display();
-
-  // WLAN
-  setup_wifi();
-
-  // MQTT
-  client.setServer(mqtt_server, 1883);
-  client.setCallback(mqttCallback);
-
-  while (!client.connected()) {
-    client.connect("ESP32_HUMID");
-  }
-  // Subscriptions
-  client.subscribe(mqtt_topic_min);
-  client.subscribe(mqtt_topic_max);
-}
+// ---------- Funktionen ----------
 
 void setup_wifi() {
   Serial.print("Connecting to ");
   Serial.print(ssid);
   WiFi.begin(ssid);
+
   while (WiFi.status() != WL_CONNECTED) {
     delay(500);
     Serial.print(".");
   }
-  Serial.println("done!");
+  Serial.println(" connected");
 }
 
 void reconnectMQTT() {
   while (!client.connected()) {
     Serial.print("MQTT reconnect...");
     if (client.connect("ESP32_HUMID")) {
-      Serial.println("connected");
+      Serial.println(" connected");
 
-      // erneut subscriben
       client.subscribe(mqtt_topic_min);
       client.subscribe(mqtt_topic_max);
-
     } else {
-      Serial.println("failed");
+      Serial.println(" failed");
       delay(2000);
     }
   }
 }
-
 
 int readMoisture() {
   int sum = 0;
@@ -102,6 +72,7 @@ int readMoisture() {
   }
   return sum / 10;
 }
+
 void mqttCallback(char* topic, byte* payload, unsigned int length) {
   char msg[20];
   if (length >= sizeof(msg)) return;
@@ -110,7 +81,7 @@ void mqttCallback(char* topic, byte* payload, unsigned int length) {
   msg[length] = '\0';
 
   int value = atoi(msg);
-  
+
   if (strcmp(topic, mqtt_topic_min) == 0) {
     min_humid = value;
     Serial.print("New MIN set: ");
@@ -122,15 +93,40 @@ void mqttCallback(char* topic, byte* payload, unsigned int length) {
     Serial.print("New MAX set: ");
     Serial.println(max_humid);
   }
-
-  Serial.print("Topic: ");
-  Serial.println(topic);
-  Serial.print("Payload: ");
-  for (int i = 0; i < length; i++) {
-    Serial.print((char)payload[i]);
-  }
-  Serial.println();
 }
+
+// ---------- Setup ----------
+
+void setup() {
+  pinMode(GREEN, OUTPUT);
+  pinMode(YELLOW, OUTPUT);
+  pinMode(RED, OUTPUT);
+  pinMode(SENSOR, INPUT);
+
+  Serial.begin(115200);
+  Wire.begin(21, 22);
+
+  // Display
+  if (!display.begin(SSD1306_SWITCHCAPVCC, 0x3C)) {
+    while (1);
+  }
+  display.clearDisplay();
+  display.display();
+
+  // WLAN
+  setup_wifi();
+
+  // MQTT
+  client.setServer(mqtt_server, 1883);
+  client.setCallback(mqttCallback);
+
+  if (client.connect("ESP32_HUMID")) {
+    client.subscribe(mqtt_topic_min);
+    client.subscribe(mqtt_topic_max);
+  }
+}
+
+// ---------- Loop ----------
 
 void loop() {
   if (!client.connected()) {
@@ -140,14 +136,18 @@ void loop() {
 
   int moisture = readMoisture();
 
-  // Rohdaten
-  String payload = String(moisture);
+  // Nur publishen, wenn Änderung >= 50
+  if (lastPublishedMoisture < 0 ||
+      abs(moisture - lastPublishedMoisture) >= PUBLISH_DELTA) {
 
-  client.publish(mqtt_topic, payload.c_str());
+    String payload = String(moisture);
+    client.publish(mqtt_topic, payload.c_str());
 
+    lastPublishedMoisture = moisture;
 
-  Serial.print("Current humidity: ");
-  Serial.println(moisture);
+    Serial.print("Published moisture: ");
+    Serial.println(moisture);
+  }
 
   // LEDs reset
   digitalWrite(GREEN, LOW);
@@ -156,26 +156,25 @@ void loop() {
 
   // Ampel
   if (moisture < min_humid) {
-    // zu trocken
-    digitalWrite(GREEN, HIGH);
+    digitalWrite(GREEN, HIGH);      // zu trocken
   } else if (moisture > max_humid) {
-    // zu nass
-    digitalWrite(RED, HIGH);
+    digitalWrite(RED, HIGH);        // zu nass
   } else {
-    // normal
-    digitalWrite(YELLOW, HIGH);
+    digitalWrite(YELLOW, HIGH);     // ok
   }
 
   // Display
   display.clearDisplay();
-  display.setTextSize(1);
   display.setTextColor(SSD1306_WHITE);
+  display.setTextSize(1);
+  display.setCursor(0, 0);
+  display.print("Moisture:");
+
   display.setTextSize(2);
-  display.setCursor(0, 10);
+  display.setCursor(0, 16);
   display.print(moisture);
 
   display.display();
-
 
   delay(500);
 }
