@@ -1,6 +1,6 @@
 #define GREEN 23
-#define YELLOW 22
-#define RED 21
+#define YELLOW 19
+#define RED 18
 #define SENSOR 26
 
 int max_humid = 10000;   // to wet
