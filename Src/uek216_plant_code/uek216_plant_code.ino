@@ -18,8 +18,8 @@ const char* ssid = "GuestWLANPortal";
 
 // MQTT
 const char* mqtt_server = "10.10.2.127";
-const char* mqtt_topic_value = "zuerich/plant/1";
-const char* mqtt_topic_status = "zuerich/plant/1/status";
+const char* mqtt_topic_value = "zuerich/plant/1/Humidity";
+const char* mqtt_topic_status = "zuerich/plant/1/Status";
 const char* mqtt_topic_min = "zuerich/plant/1/Min_Rohwert";
 const char* mqtt_topic_max = "zuerich/plant/1/Max_Rohwert";
 
