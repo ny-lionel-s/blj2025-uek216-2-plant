@@ -108,17 +108,19 @@ void mqttCallback(char* topic, byte* payload, unsigned int length) {
 
   bool limitChanged = false;
 
-  if (strcmp(topic, mqtt_topic_min) == 1700) {
-    min_humid = value;
-    limitChanged = true;
-    Serial.print("New MIN set: ");
-    Serial.println(min_humid);
-  } else if (strcmp(topic, mqtt_topic_max) == 2800) {
-    max_humid = value;
-    limitChanged = true;
-    Serial.print("New MAX set: ");
-    Serial.println(max_humid);
-  }
+  if (strcmp(topic, mqtt_topic_min) == 0) {
+  min_humid = 1700;
+  limitChanged = true;
+  Serial.print("New MIN set: ");
+  Serial.println(min_humid);
+
+} else if (strcmp(topic, mqtt_topic_max) == 0) {
+  max_humid = 2800;
+  limitChanged = true;
+  Serial.print("New MAX set: ");
+  Serial.println(max_humid);
+}
+
 
   // If min/max changed -> new Status
   if (limitChanged) {
