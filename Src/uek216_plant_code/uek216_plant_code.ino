@@ -165,9 +165,13 @@ String getStatus(int moisture) {
 // -------------------------------
 void loop() {
   // check if connection to MQTT
+  if(WiFi.status() != WL_CONNECTED){
+    setup_wifi();
+  } 
   if (!client.connected()) {
     reconnectMQTT();
   }
+  
   client.loop();
 
   unsigned long currentMillis = millis();
