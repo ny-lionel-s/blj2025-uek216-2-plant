@@ -97,7 +97,7 @@ void reconnectMQTT() {
 }
 // Callback
 void mqttCallback(char* topic, byte* payload, unsigned int length) {
-  // Payload in String umwandeln
+//payload to string
   char msg[20];
   if (length >= sizeof(msg)) return;
 
@@ -120,7 +120,7 @@ void mqttCallback(char* topic, byte* payload, unsigned int length) {
     Serial.println(max_humid);
   }
 
-  // Wenn Grenzwert geändert wurde → Status sofort neu berechnen & publishen
+  // If min/max changed -> new Status
   if (limitChanged) {
     int moisture = readMoisture();
     String status = getStatus(moisture);
@@ -154,31 +154,23 @@ String getStatus(int moisture) {
 
 // -------------------------------
 void loop() {
-  // 1. MQTT Verbindung sicherstellen
+  // check if connection to MQTT
   if (!client.connected()) {
     reconnectMQTT();
   }
-
-  // 2. MQTT "atmen" lassen
-  // Diese Funktion muss so oft wie möglich aufgerufen werden,
-  // damit eingehende Nachrichten (MIN/MAX) sofort verarbeitet werden.
   client.loop();
 
-  // 3. Zeitmessung für Sensor & Display
   unsigned long currentMillis = millis();
 
-  // Prüfen, ob 500ms vergangen sind
+  // check if 500 milis over
   if (currentMillis - lastMeasureTime >= interval) {
-    // Zeitstempel aktualisieren
     lastMeasureTime = currentMillis;
-
-    // --- Ab hier läuft dein alter Code (alle 500ms) ---
 
     int moisture = readMoisture();
     String status = getStatus(moisture);
 
-    // Werte publishen, wenn Änderung signifikant (Schwellwert 50)
-    if (lastPublishedMoisture < 0 || abs(moisture - lastPublishedMoisture) >= 50) {
+// Only publish when change is over 30
+    if (lastPublishedMoisture < 0 || abs(moisture - lastPublishedMoisture) >= 30) {
       String payload = String(moisture);
       client.publish(mqtt_topic_value, payload.c_str());
       lastPublishedMoisture = moisture;
@@ -186,7 +178,7 @@ void loop() {
       Serial.println(moisture);
     }
 
-    // Status publishen, wenn er sich ändert
+//publish when state changes
     if (status != lastStatus) {
       client.publish(mqtt_topic_status, status.c_str());
       lastStatus = status;
@@ -194,7 +186,6 @@ void loop() {
       Serial.println(status);
     }
 
-    // LEDs steuern
     digitalWrite(GREEN, LOW);
     digitalWrite(YELLOW, LOW);
     digitalWrite(RED, LOW);
@@ -207,7 +198,6 @@ void loop() {
       digitalWrite(YELLOW, HIGH);
     }
 
-    // Display aktualisieren
     display.clearDisplay();
     display.setTextColor(SSD1306_WHITE);
 
@@ -220,7 +210,5 @@ void loop() {
     display.print(status);
 
     display.display();
-
-    // HIER KEIN delay(500) MEHR!
   }
 }
