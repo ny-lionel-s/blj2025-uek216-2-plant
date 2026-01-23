@@ -18,10 +18,10 @@ const char* ssid = "GuestWLANPortal";
 
 // MQTT
 const char* mqtt_server = "10.10.2.127";
-const char* mqtt_topic_value  = "zuerich/plant/1/Humidity";
+const char* mqtt_topic_value = "zuerich/plant/1/Humidity";
 const char* mqtt_topic_status = "zuerich/plant/1/Status";
-const char* mqtt_topic_min    = "zuerich/plant/1/Min_Rohwert";
-const char* mqtt_topic_max    = "zuerich/plant/1/Max_Rohwert";
+const char* mqtt_topic_min = "zuerich/plant/1/Min_Rohwert";
+const char* mqtt_topic_max = "zuerich/plant/1/Max_Rohwert";
 
 // Caesar key
 const int CAESAR_SHIFT = 3;
@@ -42,7 +42,7 @@ Adafruit_SSD1306 display(SCREEN_WIDTH, SCREEN_HEIGHT, &Wire, -1);
 int lastPublishedMoisture = -1;
 String lastStatus = "";
 
-// ---------------- CAESAR ----------------
+// CAESAR
 String caesarEncrypt(String input, int shift) {
   String result = "";
   for (int i = 0; i < input.length(); i++) {
@@ -58,7 +58,7 @@ String caesarEncrypt(String input, int shift) {
   return result;
 }
 
-// ---------------- WIFI ----------------
+// WIFI
 void setup_wifi() {
   Serial.print("Connecting to ");
   Serial.println(ssid);
@@ -71,7 +71,7 @@ void setup_wifi() {
   Serial.println("\nWiFi connected");
 }
 
-// ---------------- MQTT ----------------
+// MQTT
 void reconnectMQTT() {
   while (!client.connected()) {
     Serial.print("MQTT connecting...");
@@ -86,7 +86,7 @@ void reconnectMQTT() {
   }
 }
 
-// ---------------- CALLBACK ----------------
+// CALLBACK
 void mqttCallback(char* topic, byte* payload, unsigned int length) {
   char msg[20];
   if (length >= sizeof(msg)) return;
@@ -120,7 +120,7 @@ void mqttCallback(char* topic, byte* payload, unsigned int length) {
   }
 }
 
-// ---------------- SENSOR ----------------
+// SENSOR
 int readMoisture() {
   int sum = 0;
   for (int i = 0; i < 10; i++) {
@@ -130,14 +130,14 @@ int readMoisture() {
   return sum / 10;
 }
 
-// ---------------- STATUS ----------------
+// STATUS
 String getStatus(int moisture) {
   if (moisture < min_humid) return "wet";
   if (moisture > max_humid) return "dry";
   return "ok";
 }
 
-// ---------------- SETUP ----------------
+// SETUP
 void setup() {
   Serial.begin(115200);
 
@@ -159,7 +159,7 @@ void setup() {
   reconnectMQTT();
 }
 
-// ---------------- LOOP ----------------
+// LOOP
 void loop() {
   if (WiFi.status() != WL_CONNECTED) {
     setup_wifi();
