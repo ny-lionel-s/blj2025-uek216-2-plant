@@ -1,0 +1,386 @@
+[
+    {
+        "id": "3c1a9d82e45b7067",
+        "type": "tab",
+        "label": "Flow 1",
+        "disabled": false,
+        "info": "",
+        "env": []
+    },
+    {
+        "id": "01664025146be2dd",
+        "type": "mqtt in",
+        "z": "3c1a9d82e45b7067",
+        "name": "",
+        "topic": "zuerich/plant/1/Humidity",
+        "qos": "2",
+        "datatype": "auto-detect",
+        "broker": "b467710c2029931f",
+        "nl": false,
+        "rap": true,
+        "rh": 0,
+        "inputs": 0,
+        "x": 280,
+        "y": 220,
+        "wires": [
+            [
+                "d2b3327bd4267653"
+            ]
+        ]
+    },
+    {
+        "id": "5ed1156f53879b48",
+        "type": "mqtt out",
+        "z": "3c1a9d82e45b7067",
+        "name": "",
+        "topic": "zuerich/plant/1/Min_Rohwert",
+        "qos": "",
+        "retain": "true",
+        "respTopic": "",
+        "contentType": "",
+        "userProps": "",
+        "correl": "",
+        "expiry": "",
+        "broker": "b467710c2029931f",
+        "x": 500,
+        "y": 440,
+        "wires": []
+    },
+    {
+        "id": "df488b8849ad7c05",
+        "type": "ui_text_input",
+        "z": "3c1a9d82e45b7067",
+        "name": "",
+        "label": "Max_Rohwert",
+        "tooltip": "",
+        "group": "26d17fa8e805fb2f",
+        "order": 6,
+        "width": "6",
+        "height": "2",
+        "passthru": true,
+        "mode": "number",
+        "delay": 300,
+        "topic": "Max_Rohwert",
+        "sendOnBlur": true,
+        "className": "",
+        "topicType": "msg",
+        "x": 260,
+        "y": 480,
+        "wires": [
+            [
+                "84fb164847f58bd7"
+            ]
+        ]
+    },
+    {
+        "id": "84fb164847f58bd7",
+        "type": "mqtt out",
+        "z": "3c1a9d82e45b7067",
+        "name": "",
+        "topic": "zuerich/plant/1/Max_Rohwert",
+        "qos": "",
+        "retain": "true",
+        "respTopic": "",
+        "contentType": "",
+        "userProps": "",
+        "correl": "",
+        "expiry": "",
+        "broker": "b467710c2029931f",
+        "x": 500,
+        "y": 480,
+        "wires": []
+    },
+    {
+        "id": "7e1be3fadde1881c",
+        "type": "ui_text_input",
+        "z": "3c1a9d82e45b7067",
+        "name": "",
+        "label": "Min_Rohwert",
+        "tooltip": "",
+        "group": "26d17fa8e805fb2f",
+        "order": 5,
+        "width": "6",
+        "height": "2",
+        "passthru": true,
+        "mode": "number",
+        "delay": 300,
+        "topic": "Min_Rohwert",
+        "sendOnBlur": true,
+        "className": "",
+        "topicType": "msg",
+        "x": 250,
+        "y": 440,
+        "wires": [
+            [
+                "5ed1156f53879b48"
+            ]
+        ]
+    },
+    {
+        "id": "861e0029af9abe0e",
+        "type": "ui_chart",
+        "z": "3c1a9d82e45b7067",
+        "name": "",
+        "group": "26d17fa8e805fb2f",
+        "order": 2,
+        "width": "6",
+        "height": "6",
+        "label": "Humidity Chart",
+        "chartType": "line",
+        "legend": "false",
+        "xformat": "HH:mm:ss",
+        "interpolate": "linear",
+        "nodata": "",
+        "dot": false,
+        "ymin": "0",
+        "ymax": "4095",
+        "removeOlder": 1,
+        "removeOlderPoints": "",
+        "removeOlderUnit": "3600",
+        "cutout": 0,
+        "useOneColor": false,
+        "useUTC": false,
+        "colors": [
+            "#1f77b4",
+            "#aec7e8",
+            "#ff7f0e",
+            "#2ca02c",
+            "#98df8a",
+            "#d62728",
+            "#ff9896",
+            "#9467bd",
+            "#c5b0d5"
+        ],
+        "outputs": 1,
+        "useDifferentColor": false,
+        "className": "modern-chart",
+        "x": 700,
+        "y": 220,
+        "wires": [
+            []
+        ]
+    },
+    {
+        "id": "a532b18b8e05c91b",
+        "type": "ui_gauge",
+        "z": "3c1a9d82e45b7067",
+        "name": "",
+        "group": "26d17fa8e805fb2f",
+        "order": 1,
+        "width": "6",
+        "height": "6",
+        "gtype": "gage",
+        "title": "Humidity",
+        "label": "Humidity",
+        "format": "{{value}}",
+        "min": 0,
+        "max": "4095",
+        "colors": [
+            "#169fda",
+            "#24c243",
+            "#eea33a"
+        ],
+        "seg1": "",
+        "seg2": "",
+        "diff": false,
+        "className": "modern-gauge",
+        "x": 680,
+        "y": 260,
+        "wires": []
+    },
+    {
+        "id": "aec123ec329df11f",
+        "type": "mqtt in",
+        "z": "3c1a9d82e45b7067",
+        "name": "",
+        "topic": "zuerich/plant/1/Status",
+        "qos": "2",
+        "datatype": "auto-detect",
+        "broker": "b467710c2029931f",
+        "nl": false,
+        "rap": true,
+        "rh": 0,
+        "inputs": 0,
+        "x": 280,
+        "y": 320,
+        "wires": [
+            [
+                "ac994a32b50ac4e3"
+            ]
+        ]
+    },
+    {
+        "id": "9e59cd5c6571d611",
+        "type": "function",
+        "z": "3c1a9d82e45b7067",
+        "name": "state to color",
+        "func": "var status = msg.payload;\n\nif (status === \"wet\") {\n    msg.color = \"#3498db\"; // Blau\n} else if (status === \"dry\") {\n    msg.color = \"#e67e22\"; // Orange\n} else if (status === \"ok\") {\n    msg.color = \"#2ecc71\"; // Grün\n} else {\n    msg.color = \"#7f8c8d\"; // Grau (Fallback)\n}\n\nreturn msg;",
+        "outputs": 1,
+        "timeout": 0,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 630,
+        "y": 320,
+        "wires": [
+            [
+                "11da2897c158fee1"
+            ]
+        ]
+    },
+    {
+        "id": "11da2897c158fee1",
+        "type": "ui_template",
+        "z": "3c1a9d82e45b7067",
+        "group": "26d17fa8e805fb2f",
+        "name": "",
+        "order": 4,
+        "width": "12",
+        "height": "3",
+        "format": "<div style=\"background: var(--card-bg); border-radius: var(--border-radius); overflow: hidden; border: 1px solid rgba(255,255,255,0.05);\">\n    <div style=\"background-color: {{msg.color}}; padding: 25px; text-align: center; color: white; font-size: 32px; font-weight: 900; letter-spacing: 2px; {{msg.payload === 'dry' ? 'animation: pulse 2s infinite;' : ''}}\">\n        {{msg.payload}}\n    </div>\n    <div style=\"background: rgba(255,255,255,0.03); padding: 15px; text-align: center; color: #aaa; font-size: 14px;\">\n        Aktueller Status: <b style=\"color: white;\">{{msg.payload}}</b>\n        <div style=\"margin-top: 5px; opacity: 0.5;\">Grenzwerte = 1700 bis 2800</div>\n    </div>\n</div>\n\n<style>\n    @keyframes pulse {\n        0% { opacity: 1; }\n        50% { opacity: 0.7; transform: scale(1.02); }\n        100% { opacity: 1; }\n    }\n</style>",
+        "storeOutMessages": true,
+        "fwdInMessages": true,
+        "resendOnRefresh": true,
+        "templateScope": "local",
+        "className": "<style>     /* Definition der Farben und Variablen */     :root {         --status-ok: #2ecc71;         --status-wet: #3498db;         --status-dry: #e67e22;         --bg-card: #ffffff;         --text-main: #2c3e50;         --text-sub: #7f8c8d;         --transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);     }      /* Der Hauptcontainer */     .status-card {         font-family: 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;         background: var(--bg-card);         border-radius: 16px;         overflow: hidden;         box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);         transition: var(--transition);         border: 1px solid rgba(0,0,0,0.05);         max-width: 100%;         margin: 10px auto;     }      /* Hover-Effekt für die ganze Karte */     .status-card:hover {         transform: translateY(-5px);         box-shadow: 0 12px 20px rgba(0, 0, 0, 0.15);     }      /* Der farbige Header-Block */     .status-header {         background-color: {{msg.color}};         padding: 30px 20px;         text-align: center;         transition: var(--transition);         position: relative;         overflow: hidden;     }      /* Ein leichter Glanz-Effekt im Header */     .status-header::after {         content: \"\";         position: absolute;         top: -50%;         left: -50%;         width: 200%;         height: 200%;         background: radial-gradient(circle, rgba(255,255,255,0.2) 0%, transparent 70%);         pointer-events: none;     }      .status-title {         color: white;         font-size: 2.5rem;         font-weight: 800;         text-transform: uppercase;         letter-spacing: 2px;         margin: 0;         text-shadow: 0 2px 4px rgba(0,0,0,0.2);     }      /* Der Textbereich unten */     .status-footer {         padding: 20px;         background: white;         text-align: center;         border-top: 1px solid rgba(0,0,0,0.05);     }      .status-info-text {         font-size: 1.1rem;         color: var(--text-sub);         margin: 0;     }      .status-highlight {         color: {{msg.color}};         font-weight: bold;         transition: var(--transition);     } </style>  <div class=\"status-card\">     <div class=\"status-header\">         <h1 class=\"status-title\">{{msg.payload}}</h1>     </div>     <div class=\"status-footer\">         <p class=\"status-info-text\">             Systemzustand: <span class=\"status-highlight\">{{msg.payload}}</span>         </p>     </div> </div>",
+        "x": 780,
+        "y": 320,
+        "wires": [
+            []
+        ]
+    },
+    {
+        "id": "331646841b3f1af8",
+        "type": "ui_template",
+        "z": "3c1a9d82e45b7067",
+        "group": "",
+        "name": "Globales CSS",
+        "order": 0,
+        "width": 0,
+        "height": 0,
+        "format": "<style>\n    /* 1. GRUND-DESIGN: Dunkler & Runder */\n    :root {\n        --bg-color: #0d0d0d;\n        /* Tiefschwarz für den Hintergrund */\n        --card-bg: #161616;\n        /* Sehr dunkles Grau für die Boxen */\n        --accent-glow: rgba(0, 255, 150, 0.3);\n        --border-radius: 20px;\n        /* Richtig schön runde Ecken */\n    }\n\n    body.nr-dashboard-theme {\n        background-color: var(--bg-color) !important;\n    }\n\n    /* Alle Dashboard-Karten (Gruppen) */\n    ui-card-panel {\n        background: var(--card-bg) !important;\n        border-radius: var(--border-radius) !important;\n        border: 1px solid rgba(255, 255, 255, 0.05) !important;\n        box-shadow: 0 10px 30px rgba(0, 0, 0, 0.6) !important;\n        transition: all 0.4s cubic-bezier(0.165, 0.84, 0.44, 1) !important;\n        margin: 10px !important;\n    }\n\n    /* HOVER-EFFEKT für die Boxen */\n    ui-card-panel:hover {\n        transform: translateY(-8px) scale(1.01);\n        box-shadow: 0 20px 40px rgba(0, 0, 0, 0.8) !important;\n        border-color: rgba(255, 255, 255, 0.1) !important;\n    }\n\n    /* 2. MODERN GAUGE (Klasse: modern-gauge) */\n    .modern-gauge svg {\n        filter: drop-shadow(0px 0px 10px rgba(0, 200, 255, 0.2));\n    }\n\n    .modern-gauge text {\n        fill: #ffffff !important;\n        font-family: 'Segoe UI', sans-serif !important;\n    }\n\n    .modern-gauge .gauge-value {\n        font-weight: bold !important;\n        font-size: 2.2em !important;\n    }\n\n    /* 3. MODERN CHART (Klasse: modern-chart) */\n    .modern-chart svg {\n        background: transparent !important;\n    }\n\n    /* Die Linie im Chart */\n    .modern-chart path.line {\n        stroke-width: 5px !important;\n        stroke-linecap: round !important;\n        filter: drop-shadow(0px 4px 8px rgba(0, 0, 0, 0.8));\n    }\n\n    /* Gitterlinien fast unsichtbar machen */\n    .modern-chart .axis line,\n    .modern-chart .grid line {\n        stroke: rgba(255, 255, 255, 0.05) !important;\n    }\n\n    .modern-chart .axis text {\n        fill: #666 !important;\n    }\n</style>\n//Css von Gemini",
+        "storeOutMessages": true,
+        "fwdInMessages": true,
+        "resendOnRefresh": true,
+        "templateScope": "global",
+        "className": "",
+        "x": 460,
+        "y": 120,
+        "wires": [
+            []
+        ]
+    },
+    {
+        "id": "fef3990c37223947",
+        "type": "ui_text",
+        "z": "3c1a9d82e45b7067",
+        "group": "26d17fa8e805fb2f",
+        "order": 3,
+        "width": "12",
+        "height": "1",
+        "name": "",
+        "label": "0 = Feucht und 4095 = trocken",
+        "format": "{{msg.payload}}",
+        "layout": "row-spread",
+        "className": "",
+        "style": true,
+        "font": "Verdana,Verdana,Geneva,sans-serif",
+        "fontSize": "12",
+        "color": "#ffffff",
+        "x": 490,
+        "y": 380,
+        "wires": []
+    },
+    {
+        "id": "ac994a32b50ac4e3",
+        "type": "function",
+        "z": "3c1a9d82e45b7067",
+        "name": "decryption",
+        "func": "const CAESAR_SHIFT = 3;\n\nlet text = String(msg.payload);\n\nfunction caesarDecrypt(text, shift) {\n    let result = \"\";\n\n    for (let i = 0; i < text.length; i++) {\n        let code = text.charCodeAt(i);\n\n        if (code >= 32 && code <= 126) {\n            let dec = code - shift;\n            if (dec < 32) {\n                dec = 127 - (32 - dec);\n            }\n            result += String.fromCharCode(dec);\n        } else {\n            result += text[i];\n        }\n    }\n    return result;\n}\n\nmsg.payload = caesarDecrypt(text, CAESAR_SHIFT);\n\nreturn msg;\n",
+        "outputs": 1,
+        "timeout": 0,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 470,
+        "y": 320,
+        "wires": [
+            [
+                "9e59cd5c6571d611"
+            ]
+        ]
+    },
+    {
+        "id": "d2b3327bd4267653",
+        "type": "function",
+        "z": "3c1a9d82e45b7067",
+        "name": "decryption",
+        "func": "const CAESAR_SHIFT = 3;\n\nlet text = String(msg.payload);\n\nfunction caesarDecrypt(text, shift) {\n    let result = \"\";\n\n    for (let i = 0; i < text.length; i++) {\n        let code = text.charCodeAt(i);\n\n        if (code >= 32 && code <= 126) {\n            let dec = code - shift;\n            if (dec < 32) {\n                dec = 127 - (32 - dec);\n            }\n            result += String.fromCharCode(dec);\n        } else {\n            result += text[i];\n        }\n    }\n    return result;\n}\n\nmsg.payload = caesarDecrypt(text, CAESAR_SHIFT);\n\nreturn msg;\n",
+        "outputs": 1,
+        "timeout": 0,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 490,
+        "y": 220,
+        "wires": [
+            [
+                "861e0029af9abe0e",
+                "a532b18b8e05c91b"
+            ]
+        ]
+    },
+    {
+        "id": "b467710c2029931f",
+        "type": "mqtt-broker",
+        "name": "",
+        "broker": "10.10.2.127",
+        "port": "1883",
+        "clientid": "",
+        "autoConnect": true,
+        "usetls": false,
+        "protocolVersion": "4",
+        "keepalive": "60",
+        "cleansession": true,
+        "autoUnsubscribe": true,
+        "birthTopic": "",
+        "birthQos": "0",
+        "birthRetain": "false",
+        "birthPayload": "",
+        "birthMsg": {},
+        "closeTopic": "",
+        "closeQos": "0",
+        "closeRetain": "false",
+        "closePayload": "",
+        "closeMsg": {},
+        "willTopic": "",
+        "willQos": "0",
+        "willRetain": "false",
+        "willPayload": "",
+        "willMsg": {},
+        "userProps": "",
+        "sessionExpiry": ""
+    },
+    {
+        "id": "26d17fa8e805fb2f",
+        "type": "ui_group",
+        "name": "Plant Humidity",
+        "tab": "b2ed987818b88d7b",
+        "order": 1,
+        "disp": true,
+        "width": "12",
+        "collapse": false,
+        "className": ""
+    },
+    {
+        "id": "b2ed987818b88d7b",
+        "type": "ui_tab",
+        "name": "Home",
+        "icon": "dashboard",
+        "disabled": false,
+        "hidden": true
+    }
+]
